@@ -35,16 +35,18 @@ public class CartServiceImpl implements CartService {
 		List<ProductReq> productReqList = groupedProductReqList(inserCartReqList);
 		Flux<Item> itemFlux = productApi.getProductList(productReqList);
 		
-		return Flux.zip(Flux.fromIterable((productReqList)), itemFlux, (req, res) -> {
-			if(StringUtils.isEmpty(res.getReturnCode())) return null;
-			Cart cart = new Cart();
-			BeanUtils.copyProperties(req, cart);
-			BeanUtils.copyProperties(res, cart);
-			cart.setNewFlag(true);		
-			return cart;
-		})
-		.filter(c->!ObjectUtils.isEmpty(c))
-		.flatMap(cart -> 	cartRepository.save(cart));
+		return Flux.zip(Flux.fromIterable((productReqList)), 
+				itemFlux, 
+				(req, res) -> {
+					if(StringUtils.isEmpty(res.getReturnCode())) return null;
+					Cart cart = new Cart();
+					BeanUtils.copyProperties(req, cart);
+					BeanUtils.copyProperties(res, cart);
+					cart.setNewFlag(true);		
+					return cart;
+					}
+				).filter(c->!ObjectUtils.isEmpty(c))
+				.flatMap(cart -> 	cartRepository.save(cart));
 	}
 	
 	@Override
@@ -55,13 +57,16 @@ public class CartServiceImpl implements CartService {
 			.concatMap(productReq -> {
 				Flux<Item> itemFlux = productApi.getProduct(productReq);
 						
-				return Flux.zip(Flux.just(productReq), itemFlux, (req, res) -> {
-					Cart cart = new Cart();
-					BeanUtils.copyProperties(req, cart);
-					BeanUtils.copyProperties(res, cart);
-					cart.setNewFlag(true);		
-					return cart;
-				});
+				return Flux.zip(Flux.just(productReq), 
+						itemFlux, 
+						(req, res) -> {
+							Cart cart = new Cart();
+							BeanUtils.copyProperties(req, cart);
+							BeanUtils.copyProperties(res, cart);
+							cart.setNewFlag(true);		
+							return cart;
+							}
+						);
 			}).flatMap(cart -> 	cartRepository.save(cart));
 			
 			
@@ -90,12 +95,14 @@ public class CartServiceImpl implements CartService {
 		return cartFlux.concatMap(cart -> {
 			Flux<Item> itemFlux = productApi.getProduct(ProductReq.getProductReqByGroupedKey(cart.getGroupedKey()));
 			
-			return Flux.zip(Flux.just(cart), itemFlux, (req, res) -> {
-				CartRes cartRes = new CartRes();
-				BeanUtils.copyProperties(req, cartRes);
-				cartRes.setItem(res);		
-				return cartRes;
-			});
+			return Flux.zip(Flux.just(cart), 
+					itemFlux, 
+					(req, res) -> {
+						CartRes cartRes = new CartRes();
+						BeanUtils.copyProperties(req, cartRes);
+						cartRes.setItem(res);		
+						return cartRes;}
+					);
 		})
 		.sort((cart1, cart2) -> cart2.getRegDttm().compareTo(cart1.getRegDttm()))
 		.sort((cart1, cart2) -> cart1.getTrNo().compareTo(cart2.getTrNo()));
@@ -132,11 +139,11 @@ public class CartServiceImpl implements CartService {
 			return Flux.zip(cpm.getItemFlux().cache().repeat()
 					, cpm.getCartFlux()
 					, (item, cart) -> {
-				CartRes cartRes = new CartRes();
-				BeanUtils.copyProperties(cart, cartRes);
-				cartRes.setItem(item);
-				return cartRes;
-			});
+						CartRes cartRes = new CartRes();
+						BeanUtils.copyProperties(cart, cartRes);
+						cartRes.setItem(item);
+						return cartRes;}
+					);
 
 		})
 		.sort((cart1, cart2) -> cart1.getRegDttm().compareTo(cart2.getRegDttm()) * -1)
