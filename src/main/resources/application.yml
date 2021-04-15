@@ -1,0 +1,13 @@
+spring:
+  r2dbc:    url: r2dbc:postgresql://localhost:5432/Order 
+    username: Order
+    password: order1111
+
+logging:
+  level:    org.springframework.web.reactive.function.client.ExchangeFunctions: DEBUG
+    org.springframework.http.codec : DEBUG
+#    reactor.netty.http.client : DEBUG
+
+api:
+  baseUri:
+    lotteon: https://pbf.lotteon.com
