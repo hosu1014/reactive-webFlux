@@ -75,7 +75,7 @@ public class CartServiceImpl implements CartService {
 	// 상품요청 정보를 그룹핑해서 요청 수량 sub
 	private List<ProductReq> groupedProductReqList(List<InsertCartReq> inserCartReqList) {
 		return inserCartReqList.stream()
-				.collect(Collectors.groupingBy(cartReq-> cartReq.getDistinctKey() ))
+				.collect(Collectors.groupingBy(cartReq-> cartReq.getGroupedKey()))
 				.entrySet().stream()
 				.map(e -> e.getValue()
 							.stream()
@@ -126,9 +126,9 @@ public class CartServiceImpl implements CartService {
 	
 	private Flux<CartRes> aggregationCartList(Flux<Cart> cartFlux) {
 		return cartFlux.cache()
-		.groupBy(cartReq -> cartReq.getGroupedKey())
+		.groupBy(cartReq -> new ProductReq(cartReq.getSpdNo(), cartReq.getSitmNo(), cartReq.getLrtrNo(), 1))
 		.concatMap(g -> {
-			Flux<Item> itemFlux = productApi.getProduct(ProductReq.getProductReqByGroupedKey(g.key()));
+			Flux<Item> itemFlux = productApi.getProduct(g.key());
 			
 			CartProductMapping cartProductMapping = new CartProductMapping();
 			cartProductMapping.setGroupedKey(g.key());
@@ -151,4 +151,26 @@ public class CartServiceImpl implements CartService {
 		;	
 	}
 	
+	private Flux<CartRes> aggregationCartList2(Flux<Cart> cartFlux) {
+		return cartFlux.cache()
+				.groupBy(cart ->ProductReq.builder()
+											.spdNo(cart.getSpdNo())
+											.sitmNo(cart.getSitmNo())
+											.lrtrNo(cart.getLrtrNo())
+											.build()) // 그룹핑 조건(상품)
+				.concatMap(groups -> {
+					return productApi.getProduct(groups.key())
+							.flatMap(item -> {
+								return groups.flatMap(cart -> {
+									CartRes cartRes = new CartRes();
+									BeanUtils.copyProperties(cart, cartRes);
+									cartRes.setItem(item);
+									return Flux.just(cartRes);
+								});
+							});
+				})
+				.sort((cart1, cart2) -> cart1.getRegDttm().compareTo(cart2.getRegDttm()) * -1)
+				.sort((cart1, cart2) -> cart1.getTrNo().compareTo(cart2.getTrNo()))
+				;	
+	}
 }

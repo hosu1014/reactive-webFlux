@@ -5,19 +5,18 @@ import org.springframework.util.StringUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
-@Getter @Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Slf4j
+@Builder
 public class ProductReq {
-	public final static String SPLIT_CHAR = "$"; 
+	private final static String SPLIT_CHAR = "$";
 	private String spdNo;
 	private String sitmNo;
 	private String lrtrNo;
@@ -31,14 +30,5 @@ public class ProductReq {
 		
 		return new ProductReq(groupedKeys[0],groupedKeys[1], groupedKeys[2], 0);
 		
-	}
-	
-	@JsonIgnore
-	public String getGroupedKey() {
-		return this.getSpdNo()
-				.concat(SPLIT_CHAR)
-				.concat(this.getSitmNo())
-				.concat(SPLIT_CHAR)
-				.concat(this.getLrtrNo());
 	}
 }

@@ -1,11 +1,8 @@
 package yoonho.demo.reactive.dto.product;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
-@Getter @Setter
-@ToString
+@Data
 public class Item {
 	private String spdNo;
 	private String spdNm;

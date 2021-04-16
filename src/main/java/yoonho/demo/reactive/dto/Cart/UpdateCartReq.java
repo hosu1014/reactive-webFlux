@@ -1,10 +1,8 @@
 package yoonho.demo.reactive.dto.Cart;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class UpdateCartReq {
 	private Long cartSn;
 	private Integer odQty;
