@@ -44,10 +44,8 @@ public class Cart implements Persistable<Long>{
 	private Integer odQty;
 	
 	@CreatedDate
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime regDttm;	
 	@LastModifiedDate
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime modDttm;
 	
 	@Transient

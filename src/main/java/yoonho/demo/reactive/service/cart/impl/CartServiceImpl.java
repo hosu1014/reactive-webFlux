@@ -17,10 +17,10 @@ import yoonho.demo.reactive.dto.Cart.CartRes;
 import yoonho.demo.reactive.dto.Cart.InsertCartReq;
 import yoonho.demo.reactive.dto.product.Item;
 import yoonho.demo.reactive.dto.product.ProductReq;
-import yoonho.demo.reactive.exapi.product.ProductApi;
 import yoonho.demo.reactive.model.Cart;
 import yoonho.demo.reactive.repository.CartRepository;
 import yoonho.demo.reactive.service.cart.CartService;
+import yoonho.demo.reactive.service.external.ProductApi;
 
 @RequiredArgsConstructor
 @Service
@@ -157,7 +157,7 @@ public class CartServiceImpl implements CartService {
 											.spdNo(cart.getSpdNo())
 											.sitmNo(cart.getSitmNo())
 											.lrtrNo(cart.getLrtrNo())
-											.build()) // 그룹핑 조건(상품)
+											.build()) 
 				.concatMap(groups -> {
 					return productApi.getProduct(groups.key())
 							.flatMap(item -> {

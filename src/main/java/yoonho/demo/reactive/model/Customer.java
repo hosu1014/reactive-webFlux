@@ -8,9 +8,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.domain.Persistable;
-import org.springframework.data.relational.core.mapping.Column;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,23 +20,14 @@ import lombok.With;
 public class Customer implements Persistable<Long> {
 
 	@Id
-	@Column 
 	@With
 	private Long id;
-	
-	@Column
 	private String name;
-	
-	@Column
 	@CreatedBy
 	private String regrId;
-	
 	@CreatedDate
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime regDttm;
-	
 	@LastModifiedDate
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime modDttm;
 	
 	@Transient
@@ -59,6 +47,4 @@ public class Customer implements Persistable<Long> {
 		this.name = name;
 		this.setNewFlag(newFlag);
 	}
-	
-	
 }

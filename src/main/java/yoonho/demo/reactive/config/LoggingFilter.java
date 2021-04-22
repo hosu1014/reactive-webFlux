@@ -18,7 +18,8 @@ public class LoggingFilter implements WebFilter {
         long startTime = System.currentTimeMillis();
         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
         log.info("filter start {}", format.format(startTime));
-        return chain.filter(exchange).doFinally(signalType -> {
+        return chain.filter(exchange)
+        		.doFinally(signalType -> {
             long totalTime = System.currentTimeMillis() - startTime;
             exchange.getAttributes().put("totalTime", totalTime);
             log.info("totalTime : {}", totalTime);
