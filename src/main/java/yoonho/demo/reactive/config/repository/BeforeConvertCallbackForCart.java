@@ -16,7 +16,6 @@ public class BeforeConvertCallbackForCart {
 	BeforeConvertCallback<Cart> CartSnGeneratingCallback(DatabaseClient databaseClient) {
 		return (cart, sqlIdentifier) -> {
 			if (cart.getId() == null) {
-				log.info("before convert call back : {}", cart);
 				return databaseClient.sql("select nextval('cart_sq01')")
 						.map(row -> row.get(0, Long.class))
 						.first() 

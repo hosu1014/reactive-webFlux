@@ -11,3 +11,14 @@ logging:
 api:
   baseUri:
     lotteon: https://pbf.lotteon.com
+    
+jjwt:
+  password:
+    encoder:
+      secret: secret
+      iteration: 33
+      keylength: 256  
+  jjwt:
+    secret: ThisIsSecretForJWTHS512SignatureAlgorithmThatMUSTHave64ByteLength
+    expiration: 1800 #60 * 30
+      
