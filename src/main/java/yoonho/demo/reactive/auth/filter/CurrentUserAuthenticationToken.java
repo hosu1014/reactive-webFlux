@@ -2,6 +2,7 @@ package yoonho.demo.reactive.auth.filter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,9 +27,11 @@ public class CurrentUserAuthenticationToken {
 		Claims claims = jwtUtil.getAllClaimsFromToken(authToken);
 		List<String> rolesMap = claims.get("role", List.class);
 		List<GrantedAuthority> authorities = new ArrayList<>();
-		rolesMap.stream().forEach(rolemap -> {
-			authorities.add(new SimpleGrantedAuthority(rolemap));
-		});
+		if(Objects.nonNull(rolesMap)) {
+			rolesMap.stream().forEach(rolemap -> {
+				authorities.add(new SimpleGrantedAuthority(rolemap));
+			});
+		}
 		return Mono.just(new UsernamePasswordAuthenticationToken(claims.getSubject(), null, authorities));
 	}
 }

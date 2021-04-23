@@ -7,21 +7,21 @@ import org.springframework.r2dbc.core.DatabaseClient;
 
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
-import yoonho.demo.reactive.model.Customer;
+import yoonho.demo.reactive.model.User;
 
 @Configuration
 @Slf4j
-public class BeforeConvertCallbackForCustomer {
+public class BeforeConvertCallbackForMember {
 	@Bean
-	BeforeConvertCallback<Customer> idGeneratingCallback(DatabaseClient databaseClient) {
-		return (customer, sqlIdentifier) -> {
-			if (customer.getId() == null) {
-				return databaseClient.sql("select nextval('customer_sq01')")
+	BeforeConvertCallback<User> memberNoGeneratingCallback(DatabaseClient databaseClient) {
+		return (user, sqlIdentifier) -> {
+			if (user.getId() == null) {
+				return databaseClient.sql("select nextval('member_sq01')")
 						.map(row -> row.get(0, Long.class))
 						.first() 
-						.map(customer::withId);
+						.map(user::withId);
 			}
-			return Mono.just(customer);
+			return Mono.just(user);
 		};
 	}
 }

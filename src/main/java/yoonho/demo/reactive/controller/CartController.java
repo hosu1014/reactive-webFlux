@@ -54,7 +54,6 @@ public class CartController {
 	}
 	
 	@GetMapping("/list2")
-	@PreAuthorize("hasRole('USER')")
 	public Flux<CartRes> getCartList2() {
 		return cartService.getList2();
 	}

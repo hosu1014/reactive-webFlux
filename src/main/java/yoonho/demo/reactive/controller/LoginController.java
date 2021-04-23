@@ -37,13 +37,16 @@ public class LoginController {
 	public Mono<ResponseEntity<?>> login(@RequestBody AuthRequest ar) {
 		log.info("encode password is [{}]", passwordEncoder.encode(ar.getPassword()));
 		
-		return userService.findByUsername(ar.getUsername()).map((userDetails) -> {
-			if (passwordEncoder.encode(ar.getPassword()).equals(userDetails.getPassword())) {
-				return ResponseEntity.ok(new AuthResponse(jwtUtil.generateToken(userDetails)));
-			} else {
-				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-			}
-		}).defaultIfEmpty(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+		
+		return userService.findByUserId(ar.getUserId())
+				.map(user -> {
+					if( user.getEncPassword().equals(passwordEncoder.encode(ar.getPassword()))) {
+						return ResponseEntity.ok(new AuthResponse(jwtUtil.generateToken(user)));
+					} else {
+						return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+					}
+				})
+				.defaultIfEmpty(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
 	}
 	
 	private Mono<String> getUserId() {

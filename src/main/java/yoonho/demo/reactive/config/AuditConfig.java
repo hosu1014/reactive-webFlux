@@ -28,7 +28,8 @@ public class AuditConfig {
 				        	if(Objects.nonNull(authentication.getPrincipal()) == false) 
 				        		return Mono.empty();
 				        	return Mono.just(authentication.getPrincipal().toString());
-				        });
+				        })
+				        .switchIfEmpty(Mono.just("FRONT"));
 			}
 		};
 	}
