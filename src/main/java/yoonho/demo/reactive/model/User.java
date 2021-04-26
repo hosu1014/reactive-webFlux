@@ -45,6 +45,7 @@ public class User implements UserDetails, Persistable<Long>{
 	@Column("mb_nm")
 	private String username;
 	private String email;
+	private String rtGrpNo;
 	@CreatedBy
 	private String regrId;
 	@CreatedDate

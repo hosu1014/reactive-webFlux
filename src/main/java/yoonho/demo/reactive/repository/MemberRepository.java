@@ -7,7 +7,7 @@ import reactor.core.publisher.Mono;
 import yoonho.demo.reactive.model.User;
 
 @Repository
-public interface MemberRepository extends ReactiveCrudRepository<User, Long> {
+public interface MemberRepository extends ReactiveCrudRepository<User, Long>, MemberAuthCheckRepository {
 
 	public Mono<User> findByUserId(String userId);
 }

@@ -15,7 +15,13 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public Mono<User> findByUserId(String userId) {
+		
 		return memberRepository.findByUserId(userId);
 		
+		
+	}
+	
+	public Mono<Long> checkAuthority(String userId, String uri) {
+		return memberRepository.checkAuthority(userId, uri);
 	}
 }
