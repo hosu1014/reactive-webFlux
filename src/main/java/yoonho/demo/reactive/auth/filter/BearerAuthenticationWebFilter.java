@@ -12,14 +12,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 import yoonho.demo.reactive.auth.AuthenticationManager;
-import yoonho.demo.reactive.util.JWTUtil;
 
-@Component
 @RequiredArgsConstructor
+@Component
 @Slf4j
 public class BearerAuthenticationWebFilter {
 	private final AuthenticationManager authenticationManager;
-	private final JWTUtil jwtUtil;
+	private final CurrentUserAuthenticationToken currentUserAuthenticationToken;
 	
 	private static final String BEARER = "Bearer ";
 	private static final Predicate<String> matchBearerLength = authValue -> authValue.length() > BEARER.length();
@@ -34,7 +33,7 @@ public class BearerAuthenticationWebFilter {
 				    .getFirst(HttpHeaders.AUTHORIZATION))
 				.filter(matchBearerLength)
 				.flatMap(isolateBearerValue)
-				.flatMap(authToken -> new CurrentUserAuthenticationToken(jwtUtil).create(authToken))
+				.flatMap(currentUserAuthenticationToken::create)
 				;
 		});
 		

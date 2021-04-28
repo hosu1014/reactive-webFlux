@@ -8,11 +8,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
 import reactor.core.publisher.Mono;
 import yoonho.demo.reactive.util.JWTUtil;
 
+@Component
 public class CurrentUserAuthenticationToken {
 	private final JWTUtil jwtUtil;
 	

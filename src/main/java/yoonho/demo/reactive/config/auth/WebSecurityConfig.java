@@ -38,7 +38,6 @@ public class WebSecurityConfig {
 			.pathMatchers(HttpMethod.OPTIONS).permitAll()
 			.pathMatchers("/login", "/member/signUp").permitAll()
 			.anyExchange().access(uriAuthorizationManager)
-			// .anyExchange().authenticated()
 			.and().build();
 	}
 }

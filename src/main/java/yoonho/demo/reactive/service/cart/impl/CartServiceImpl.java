@@ -81,9 +81,9 @@ public class CartServiceImpl implements CartService {
 							.stream()
 							.reduce((acc, cur) -> new InsertCartReq(acc.getSpdNo(), acc.getSitmNo(), acc.getOdQty() + cur.getOdQty()))
 						)
-				.map(op -> {
+				.map(cartReq -> {
 					ProductReq productReq = new ProductReq();
-					BeanUtils.copyProperties(op.get(), productReq);
+					BeanUtils.copyProperties(cartReq.get(), productReq);
 					return productReq;
 				})
 				.collect(Collectors.toList());
