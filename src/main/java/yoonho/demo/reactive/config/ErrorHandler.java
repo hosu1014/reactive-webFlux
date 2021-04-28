@@ -1,78 +1,55 @@
 package yoonho.demo.reactive.config;
 
-import java.io.IOException;
+import java.util.Map;
 
-import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler;
+import org.springframework.boot.web.error.ErrorAttributeOptions;
+import org.springframework.boot.web.reactive.error.ErrorAttributes;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.core.io.buffer.DataBuffer;
-import org.springframework.core.io.buffer.DataBufferFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.server.ServerWebExchange;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.codec.ServerCodecConfigurer;
+import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.server.RequestPredicates;
+import org.springframework.web.reactive.function.server.RouterFunction;
+import org.springframework.web.reactive.function.server.RouterFunctions;
+import org.springframework.web.reactive.function.server.ServerRequest;
+import org.springframework.web.reactive.function.server.ServerResponse;
 
 import reactor.core.publisher.Mono;
-import yoonho.demo.reactive.dto.CommonRes;
 
-@Configuration
-@Order(-2)
-public class ErrorHandler implements ErrorWebExceptionHandler  {
-	private ObjectMapper objectMapper;
+@Component
+@Order(Ordered.HIGHEST_PRECEDENCE)
+public class ErrorHandler extends AbstractErrorWebExceptionHandler {
+	
 
-	  public ErrorHandler(ObjectMapper objectMapper) {
-	    this.objectMapper = objectMapper;
-	  }
+	public ErrorHandler(ErrorAttributes errorAttributes,
+			org.springframework.boot.autoconfigure.web.WebProperties.Resources resources,
+			ApplicationContext applicationContext, ServerCodecConfigurer configurer) {
+		super(errorAttributes, resources, applicationContext);
+		this.setMessageWriters(configurer.getWriters());
+	}
 
-	  @Override
-	  public Mono<Void> handle(ServerWebExchange serverWebExchange, Throwable throwable) {
+	@Override
+	protected RouterFunction<ServerResponse> getRoutingFunction(ErrorAttributes errorAttributes) {
+		return RouterFunctions.route(RequestPredicates.all(), this::renderErrorResponse);
+	}
+	
+	 private Mono<ServerResponse> renderErrorResponse(ServerRequest request) {
+		Map<String, Object> errorAttributes = getErrorAttributes(request, ErrorAttributeOptions.defaults());
+		Throwable throwable = getError(request);
+		
+		
+//		boolean isCustomException = throwable instanceof CustomException;
+		int status = (int) errorAttributes.get("status");
+		
+		errorAttributes.put("exception", throwable.getClass().getSimpleName());
+		errorAttributes.put("message", throwable.getMessage());
+		
+		return ServerResponse.status(status).contentType(MediaType.APPLICATION_JSON)
+				.body(BodyInserters.fromValue(errorAttributes));
+	}
 
-			CommonRes<Void> commonRes = new CommonRes<Void>();
-			commonRes.setReturnCode("500");
-			commonRes.setMessage(throwable.getMessage());
-
-			DataBufferFactory bufferFactory = serverWebExchange.getResponse().bufferFactory();
-			serverWebExchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
-			DataBuffer dataBuffer = null;
-			try {
-				dataBuffer = bufferFactory.wrap(objectMapper.writeValueAsBytes(commonRes));
-			} catch (JsonProcessingException e) {
-				dataBuffer = bufferFactory.wrap("".getBytes());
-			}
-			serverWebExchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
-			return serverWebExchange.getResponse().writeWith(Mono.just(dataBuffer));
-//	      
-//	    
-//	    if (throwable instanceof IOException) {
-//	      serverWebExchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
-//	      DataBuffer dataBuffer = null;
-//	      try {
-//	        dataBuffer = bufferFactory.wrap(objectMapper.writeValueAsBytes(commonRes));
-//	      } catch (JsonProcessingException e) {
-//	        dataBuffer = bufferFactory.wrap("".getBytes());
-//	      }
-//	      serverWebExchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
-//	      return serverWebExchange.getResponse().writeWith(Mono.just(dataBuffer));
-//	    }
-//
-//	    serverWebExchange.getResponse().setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
-//	    serverWebExchange.getResponse().getHeaders().setContentType(MediaType.TEXT_PLAIN);
-//	    DataBuffer dataBuffer = bufferFactory.wrap("Unknown error".getBytes());
-//	    return serverWebExchange.getResponse().writeWith(Mono.just(dataBuffer));
-	  }
-
-	  public class HttpError {
-
-	    private String message;
-
-	    HttpError(String message) {
-	      this.message = message;
-	    }
-
-	    public String getMessage() {
-	      return message;
-	    }
-	  }
 }
