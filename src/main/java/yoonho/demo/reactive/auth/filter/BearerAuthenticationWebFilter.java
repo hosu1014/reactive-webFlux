@@ -11,13 +11,13 @@ import org.springframework.web.server.WebFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
-import yoonho.demo.reactive.auth.AuthenticationManager;
+import yoonho.demo.reactive.auth.CustomAuthenticationManager;
 
 @RequiredArgsConstructor
 @Component
 @Slf4j
 public class BearerAuthenticationWebFilter {
-	private final AuthenticationManager authenticationManager;
+	private final CustomAuthenticationManager authenticationManager;
 	private final CurrentUserAuthenticationToken currentUserAuthenticationToken;
 	
 	private static final String BEARER = "Bearer ";

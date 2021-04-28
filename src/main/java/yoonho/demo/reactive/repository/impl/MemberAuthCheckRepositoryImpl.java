@@ -15,11 +15,7 @@ public class MemberAuthCheckRepositoryImpl implements MemberAuthCheckRepository 
 	
 	@Override
 	public Mono<Long> checkAuthority(String userId, String uri) {
-		
-		log.info("userId is {}, uri is {}", userId, uri);
-		
 		DatabaseClient dbClient = template.getDatabaseClient();
-		
 		return dbClient.sql("select count(r.rt_grp_no) count \r\n"
 				+ "   from me_member m\r\n"
 				+ "      , st_rt_info r \r\n"

@@ -11,7 +11,7 @@ import reactor.core.publisher.Mono;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class AuthenticationManager implements ReactiveAuthenticationManager  {
+public class CustomAuthenticationManager implements ReactiveAuthenticationManager  {
 	@Override
 	public Mono<Authentication> authenticate(Authentication authentication) {
 		return Mono.just(authentication);
