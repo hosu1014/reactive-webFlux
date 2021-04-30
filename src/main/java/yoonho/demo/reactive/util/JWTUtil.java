@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import yoonho.demo.reactive.exception.UnauthorizedException;
 import yoonho.demo.reactive.model.User;
 
 @Component
@@ -32,7 +33,16 @@ public class JWTUtil {
 	}
 
 	public Claims getAllClaimsFromToken(String token) {
-		return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+		try {
+			return Jwts.parserBuilder()
+				.setSigningKey(key)
+				.build()
+				.parseClaimsJws(token)
+				.getBody();
+		
+		} catch (Exception e) {
+			throw new UnauthorizedException(e.getMessage());
+		}
 	}
 
 	public String getUsernameFromToken(String token) {

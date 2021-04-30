@@ -6,6 +6,8 @@ spring:
 logging:
   level:    org.springframework.web.reactive.function.client.ExchangeFunctions: DEBUG
     org.springframework.http.codec : DEBUG
+    org.springframework.security.web.server.authorization.DelegatingReactiveAuthorizationManager : DEBUG 
+#    org.springframework.security : DEBUG
 #    reactor.netty.http.client : DEBUG
 
 api:
@@ -20,5 +22,5 @@ jjwt:
       keylength: 256  
   jjwt:
     secret: ThisIsSecretForJWTHS512SignatureAlgorithmThatMUSTHave64ByteLength
-    expiration: 1800 #60 * 30
+    expiration: 3600 #60 * 60
       
