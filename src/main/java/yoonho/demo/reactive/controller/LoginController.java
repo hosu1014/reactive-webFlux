@@ -2,7 +2,6 @@ package yoonho.demo.reactive.controller;
 
 import java.util.Objects;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
@@ -17,9 +16,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 import yoonho.demo.reactive.auth.PBKDF2Encoder;
+import yoonho.demo.reactive.config.Messages;
 import yoonho.demo.reactive.dto.auth.AuthRequest;
 import yoonho.demo.reactive.dto.auth.AuthResponse;
-import yoonho.demo.reactive.dto.auth.Message;
+import yoonho.demo.reactive.dto.auth.MessageResponse;
+import yoonho.demo.reactive.exception.UnauthorizedException;
 import yoonho.demo.reactive.service.auth.UserService;
 import yoonho.demo.reactive.util.JWTUtil;
 
@@ -30,11 +31,12 @@ public class LoginController {
 	private final JWTUtil jwtUtil;
 	private final PBKDF2Encoder passwordEncoder;
 	private final UserService userService;
+	private final Messages messages;
 	
 	private final Mono<SecurityContext> context  = ReactiveSecurityContextHolder.getContext();
 	
 	@PostMapping("/login")
-	public Mono<ResponseEntity<?>> login(@RequestBody AuthRequest ar) {
+	public Mono<ResponseEntity<AuthResponse>> login(@RequestBody AuthRequest ar)  throws UnauthorizedException{
 		log.info("encode password is [{}]", passwordEncoder.encode(ar.getPassword()));
 		
 		
@@ -43,10 +45,9 @@ public class LoginController {
 					if( user.getEncPassword().equals(passwordEncoder.encode(ar.getPassword()))) {
 						return ResponseEntity.ok(new AuthResponse(jwtUtil.generateToken(user)));
 					} else {
-						return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+						throw new UnauthorizedException(messages.getMessage("login.passwd.error", new String[] {ar.getUserId()} )) ;
 					}
-				})
-				.defaultIfEmpty(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+				}).defaultIfEmpty(ResponseEntity.badRequest().build());
 	}
 	
 	private Mono<String> getUserId() {
@@ -63,18 +64,18 @@ public class LoginController {
 	@RequestMapping(value = "/resource/user", method = RequestMethod.GET)
 	@PreAuthorize("hasRole('USER')")
 	public  Mono<ResponseEntity<?>> user() {		
-		return  getUserId().flatMap(userId-> Mono.just(ResponseEntity.ok(new Message(userId))));
+		return  getUserId().flatMap(userId-> Mono.just(ResponseEntity.ok(new MessageResponse(userId))));
 	}
 	
 	@RequestMapping(value = "/resource/admin", method = RequestMethod.GET)
 	@PreAuthorize("hasRole('ADMIN')")
 	public Mono<ResponseEntity<?>> admin() {
-		return Mono.just(ResponseEntity.ok(new Message("Content for admin")));
+		return Mono.just(ResponseEntity.ok(new MessageResponse("Content for admin")));
 	}
 	
 	@RequestMapping(value = "/resource/user-or-admin", method = RequestMethod.GET)
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public Mono<ResponseEntity<?>> userOrAdmin() {
-		return Mono.just(ResponseEntity.ok(new Message("Content for user or admin")));
+		return Mono.just(ResponseEntity.ok(new MessageResponse("Content for user or admin")));
 	}
 }

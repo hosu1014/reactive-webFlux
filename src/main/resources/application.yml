@@ -2,12 +2,14 @@ spring:
   r2dbc:    url: r2dbc:postgresql://localhost:5432/Order 
     username: Order
     password: order1111
+  messages:    basename: i18n/messages
+    
 
 logging:
   level:    org.springframework.web.reactive.function.client.ExchangeFunctions: DEBUG
     org.springframework.http.codec : DEBUG
     org.springframework.security.web.server.authorization.DelegatingReactiveAuthorizationManager : DEBUG 
-#    org.springframework.security : DEBUG
+    org.springframework.security : DEBUG
 #    reactor.netty.http.client : DEBUG
 
 api:

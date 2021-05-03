@@ -19,8 +19,6 @@ public class DateFormatConfig {
 	@Bean 
 	public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer(){
 		return jacksonObjectMapperBuilder -> {
-			jacksonObjectMapperBuilder.timeZone(TimeZone.getTimeZone("UTC"));
-			jacksonObjectMapperBuilder.simpleDateFormat(datetimeFormat);
 			jacksonObjectMapperBuilder.serializationInclusion(JsonInclude.Include.NON_NULL);
 
 			jacksonObjectMapperBuilder.serializers(new LocalDateSerializer(DateTimeFormatter.ofPattern(dateFormat)));
