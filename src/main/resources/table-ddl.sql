@@ -44,7 +44,7 @@ CREATE TABLE public.me_member (
 
 INSERT INTO public.me_member
 (mb_no, user_id, passwd, mb_nm, email, regr_id, reg_dttm, modr_id, mod_dttm, rt_grp_no)
-VALUES(5, 'hosu1014', 'Me6/NnW1SnQOEfsb6MKnqMiz9tqamAPZbFv/2RyZ67g=', '정윤호', 'hosu1014@plateer.com', 'FRONT', '2021-04-23 17:22:46.958', 'FRONT', '2021-04-23 17:22:46.958', NULL);
+VALUES(5, 'hosu1014', 'wH7NwomJ6oO2Kku1TDeHDj2Bth1FOgh2BD9+MbR+sIw=', '정윤호', 'hosu1014@plateer.com', 'FRONT', '2021-04-23 17:22:46.958', 'FRONT', '2021-04-23 17:22:46.958', NULL);
 
 
 
