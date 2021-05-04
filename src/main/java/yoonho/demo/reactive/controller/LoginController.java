@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ServerWebExchange;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +37,7 @@ public class LoginController {
 	private final Mono<SecurityContext> context  = ReactiveSecurityContextHolder.getContext();
 	
 	@PostMapping("/login")
-	public Mono<ResponseEntity<AuthResponse>> login(@RequestBody AuthRequest ar)  throws UnauthorizedException{
+	public Mono<ResponseEntity<AuthResponse>> login(ServerWebExchange se, @RequestBody AuthRequest ar)  throws UnauthorizedException{
 		log.info("encode password is [{}]", passwordEncoder.encode(ar.getPassword()));
 		
 		
@@ -62,8 +63,7 @@ public class LoginController {
 	}
 	
 	@RequestMapping(value = "/resource/user", method = RequestMethod.GET)
-	@PreAuthorize("hasRole('USER')")
-	public  Mono<ResponseEntity<?>> user() {		
+	public  Mono<ResponseEntity<?>> user(ServerWebExchange exchange) {		
 		return  getUserId().flatMap(userId-> Mono.just(ResponseEntity.ok(new MessageResponse(userId))));
 	}
 	

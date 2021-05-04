@@ -16,10 +16,17 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.adapter.HttpWebHandlerAdapter;
 import org.springframework.web.server.adapter.WebHttpHandlerBuilder;
+import org.springframework.web.server.i18n.LocaleContextResolver;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Configuration
+/**
+ * 다국어 설정 테스트를 위해 설정한 config임. 
+ * 최초 로딩시 한번만 적용이 되고 이후는 적용 되지 않음.   
+ * @author 정윤호
+ *
+ */
+
 @Slf4j
 public class LocaleContextHandler {
 
@@ -42,8 +49,6 @@ public class LocaleContextHandler {
 						LocaleContextHolder.setLocaleContext(localeContext, true);
 					}
 				}
-				log.info("locale context Locale is {}", LocaleContextHolder.getLocaleContext().getLocale());
-				log.info("serverWebExchange Locale is {}", serverWebExchange.getLocaleContext().getLocale());
 				return serverWebExchange;
 			}
 		};
