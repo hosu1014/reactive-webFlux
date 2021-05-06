@@ -1,7 +1,6 @@
 package yoonho.demo.reactive.config;
 
 import java.time.format.DateTimeFormatter;
-import java.util.TimeZone;
 
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -27,4 +26,5 @@ public class DateFormatConfig {
 		};
 
 	}
+	
 }
