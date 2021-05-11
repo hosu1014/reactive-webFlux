@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import yoonho.demo.reactive.base.dataencrypt.DataEncrypt;
 
 @Slf4j
-public class DataEncryptUtils {
+public class ReadWriteConverterUtil {
 	public static void readConvert(Row source, Object object) {
 		Arrays.stream(object.getClass().getDeclaredFields()) 
 		.forEach(field -> {

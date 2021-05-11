@@ -6,14 +6,14 @@ import org.springframework.data.convert.ReadingConverter;
 import io.r2dbc.spi.Row;
 import lombok.extern.slf4j.Slf4j;
 import yoonho.demo.reactive.model.User;
-import yoonho.demo.reactive.util.DataEncryptUtils;
+import yoonho.demo.reactive.util.ReadWriteConverterUtil;
 
 @ReadingConverter
 @Slf4j
 public class UserReadingConverter implements Converter<Row, User> {
 	public User convert(Row source) {
 		User user = new User();
-		DataEncryptUtils.readConvert(source, user);
+		ReadWriteConverterUtil.readConvert(source, user);
 		return user;
 	}
 }

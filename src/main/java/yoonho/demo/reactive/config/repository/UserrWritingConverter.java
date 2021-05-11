@@ -6,12 +6,12 @@ import org.springframework.data.r2dbc.mapping.OutboundRow;
 
 import lombok.extern.slf4j.Slf4j;
 import yoonho.demo.reactive.model.User;
-import yoonho.demo.reactive.util.DataEncryptUtils;
+import yoonho.demo.reactive.util.ReadWriteConverterUtil;
 
 @WritingConverter
 @Slf4j
 public class UserrWritingConverter implements Converter<User, OutboundRow> {
 	public OutboundRow convert(User source) {
-		return DataEncryptUtils.writeConvert(source);
+		return ReadWriteConverterUtil.writeConvert(source);
 	}
 }
