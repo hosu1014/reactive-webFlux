@@ -13,6 +13,8 @@ import org.springframework.util.ReflectionUtils;
 import io.r2dbc.spi.Row;
 import lombok.extern.slf4j.Slf4j;
 import yoonho.demo.reactive.base.dataencrypt.DataEncrypt;
+import yoonho.demo.reactive.base.dataencrypt.DataEncryptor;
+import yoonho.demo.reactive.base.dataencrypt.EncryptType;
 
 @Slf4j
 public class ReadWriteConverterUtil {
@@ -24,9 +26,9 @@ public class ReadWriteConverterUtil {
 			if(field.isAnnotationPresent(Transient.class) == false 
 					&& ObjectUtils.isEmpty(source.get(db_column_name)) == false) {
 				if(field.isAnnotationPresent(DataEncrypt.class)) {
+					EncryptType encType = field.getDeclaredAnnotation(DataEncrypt.class).type();
 					String value = source.get(db_column_name, String.class);
-					value = value.replaceAll("\\*", "");
-					ReflectionUtils.setField(field, object, value );
+					ReflectionUtils.setField(field, object, DataEncryptor.decrypt(value, encType) );
 				} else {
 					ReflectionUtils.setField(field, object, source.get(db_column_name));
 				}
@@ -44,7 +46,9 @@ public class ReadWriteConverterUtil {
 					if(ObjectUtils.isEmpty(field.get(source))) return;
 					
 					if(field.isAnnotationPresent(DataEncrypt.class)) {
-						row.put(getFieldName(field), Parameter.from(field.get(source) + "***"));
+						EncryptType encType = field.getDeclaredAnnotation(DataEncrypt.class).type();
+						String value = String.valueOf(field.get(source));
+						row.put(getFieldName(field), Parameter.from(DataEncryptor.encrypt(value, encType)));
 					} else {
 						row.put(getFieldName(field), Parameter.from(field.get(source)));
 					}

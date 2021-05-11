@@ -20,10 +20,9 @@ api:
 jjwt:
   password:
     encoder:
-      secret: secret
+      secret: ThisIsSecretForJWTHS512SignatureAlgorithmThatMUSTHave64ByteLength
+      salt: secret
       iteration: 33
       keylength: 256  
-  jjwt:
-    secret: ThisIsSecretForJWTHS512SignatureAlgorithmThatMUSTHave64ByteLength
-    expiration: 86400 #60 * 60
+      expiration: 86400 #60 * 60
       

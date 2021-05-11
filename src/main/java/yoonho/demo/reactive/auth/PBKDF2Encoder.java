@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class PBKDF2Encoder implements PasswordEncoder {
 	
-	@Value("${jjwt.password.encoder.secret}")
-	private String secret;
+	@Value("${jjwt.password.encoder.salt}")
+	private String salt;
 	@Value("${jjwt.password.encoder.iteration}")
 	private Integer iteration;
 	@Value("${jjwt.password.encoder.keylength}")
@@ -25,7 +25,7 @@ public class PBKDF2Encoder implements PasswordEncoder {
 	public String encode(CharSequence rawPassword) {
 		try {
 			byte[] result = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512")
-					.generateSecret(new PBEKeySpec(rawPassword.toString().toCharArray(), secret.getBytes(), iteration, keylength))
+					.generateSecret(new PBEKeySpec(rawPassword.toString().toCharArray(), salt.getBytes(), iteration, keylength))
 					.getEncoded();
 			return Base64.getEncoder().encodeToString(result);
 		} catch(NoSuchAlgorithmException | InvalidKeySpecException ex) {

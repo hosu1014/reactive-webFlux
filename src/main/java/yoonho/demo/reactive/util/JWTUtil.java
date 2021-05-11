@@ -19,10 +19,10 @@ import yoonho.demo.reactive.model.User;
 
 @Component
 public class JWTUtil {
-	@Value("${jjwt.jjwt.secret}")
+	@Value("${jjwt.password.encoder.secret}")
 	private String secret;
 
-	@Value("${jjwt.jjwt.expiration}")
+	@Value("${jjwt.password.encoder.expiration}")
 	private String expirationTime;
 
 	private Key key;

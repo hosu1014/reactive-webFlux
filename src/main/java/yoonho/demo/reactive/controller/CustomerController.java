@@ -24,7 +24,7 @@ public class CustomerController {
 	@GetMapping("/list")
 	public Flux<Customer> getCustomers() {
 		log.info("controller start");
-		return customerRepository.findByName("정윤호1").log();
+		return customerRepository.findAll();
 	}
 	
 	@PostMapping("/add")
@@ -55,6 +55,7 @@ public class CustomerController {
 				.findById(customer.getId())
 				.map(c -> {
 					c.setName(customer.getName());
+					c.setCcrdNo(customer.getCcrdNo());
 					return c;
 				})
 				.flatMap(c -> customerRepository.save(c))
