@@ -11,7 +11,7 @@ import yoonho.demo.reactive.model.Customer;
 
 @Configuration
 @Slf4j
-public class BeforeConvertCallbackForCustomer {
+public class CustomerBeforeConvertCallback {
 	@Bean
 	BeforeConvertCallback<Customer> idGeneratingCallback(DatabaseClient databaseClient) {
 		return (customer, sqlIdentifier) -> {
@@ -22,6 +22,6 @@ public class BeforeConvertCallbackForCustomer {
 						.map(customer::withId);
 			}
 			return Mono.just(customer);
-		};
+		}; 
 	}
 }

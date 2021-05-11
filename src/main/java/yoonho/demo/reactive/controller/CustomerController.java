@@ -1,6 +1,5 @@
 package yoonho.demo.reactive.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -25,12 +24,13 @@ public class CustomerController {
 	@GetMapping("/list")
 	public Flux<Customer> getCustomers() {
 		log.info("controller start");
-		return customerRepository.findAll().log();
+		return customerRepository.findByName("정윤호1").log();
 	}
 	
 	@PostMapping("/add")
 	public Mono<Customer> addCustomers(@RequestBody Customer customer) {
 		Mono<Customer> custMono = Mono.just(customer).log();
+		
 		return Mono.zip(custMono, customerRepository.getId())
 		    .map(tuple -> {
 		    	tuple.getT1().setId(tuple.getT2());

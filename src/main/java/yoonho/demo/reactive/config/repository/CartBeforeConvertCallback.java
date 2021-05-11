@@ -11,7 +11,7 @@ import yoonho.demo.reactive.model.Cart;
 
 @Configuration
 @Slf4j
-public class BeforeConvertCallbackForCart {
+public class CartBeforeConvertCallback {
 	@Bean
 	BeforeConvertCallback<Cart> CartSnGeneratingCallback(DatabaseClient databaseClient) {
 		return (cart, sqlIdentifier) -> {

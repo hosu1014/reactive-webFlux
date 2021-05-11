@@ -34,6 +34,7 @@ public class OrderController {
 		cardPaymentReq.setCardNo("9190****39391291");
 		paymentReqList.add(cardPaymentReq);
 		
+		
 		BankPaymentReq bankPaymentReq = new BankPaymentReq();
 		bankPaymentReq.setBank(Bank.lookup("03"));
 		bankPaymentReq.setAccountNo("1114564545");

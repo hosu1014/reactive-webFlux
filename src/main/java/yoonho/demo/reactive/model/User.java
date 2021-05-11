@@ -25,12 +25,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.With;
 import yoonho.demo.reactive.auth.Role;
+import yoonho.demo.reactive.base.dataencrypt.DataEncrypt;
+import yoonho.demo.reactive.base.dataencrypt.EncryptType;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Table("me_member")
 public class User implements UserDetails, Persistable<Long>{
+	@Transient
 	private static final long serialVersionUID = 1L;
 	
 	@Id
@@ -46,6 +49,10 @@ public class User implements UserDetails, Persistable<Long>{
 	private String username;
 	private String email;
 	private String rtGrpNo;
+	@DataEncrypt(type=EncryptType.CARD_NO)
+	private String ccrdNo;
+	@DataEncrypt(type=EncryptType.ACCOUT_NO)
+	private String acntNo;
 	@CreatedBy
 	private String regrId;
 	@CreatedDate

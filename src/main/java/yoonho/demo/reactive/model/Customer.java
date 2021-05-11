@@ -13,22 +13,27 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.With;
+import yoonho.demo.reactive.base.dataencrypt.DataEncrypt;
+import yoonho.demo.reactive.base.dataencrypt.EncryptType;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Customer implements Persistable<Long> {
+public class Customer extends BaseEntity implements Persistable<Long> {
 
 	@Id
 	@With
 	private Long id;
 	private String name;
+	@DataEncrypt(type=EncryptType.CARD_NO)
+	private String ccrdNo;
 	@CreatedBy
 	private String regrId;
 	@CreatedDate
 	private LocalDateTime regDttm;
 	@LastModifiedDate
 	private LocalDateTime modDttm;
+	
 	
 	@Transient
     private boolean newFlag;

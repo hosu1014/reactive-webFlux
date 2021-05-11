@@ -11,7 +11,7 @@ import yoonho.demo.reactive.model.User;
 
 @Configuration
 @Slf4j
-public class BeforeConvertCallbackForMember {
+public class MemberBeforeConvertCallback {
 	@Bean
 	BeforeConvertCallback<User> memberNoGeneratingCallback(DatabaseClient databaseClient) {
 		return (user, sqlIdentifier) -> {
