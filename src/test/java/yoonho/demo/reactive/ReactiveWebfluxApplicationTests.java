@@ -5,11 +5,11 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.checkerframework.checker.regex.qual.Regex;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.shadow.com.univocity.parsers.conversions.RegexConversion;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.StringUtils;
 
@@ -29,6 +29,31 @@ class ReactiveWebfluxApplicationTests {
 	void contextLoads() {
 	}
 	
+	
+	@Test
+	void cardNoExtractTest() {
+		final String binNoExcludeRegex = "[^\\d*]"; 
+		final String binNoRegex= "([0-9*]{6})([0-9*]*)";
+		String cardNo = "1234.**44-****/38938";
+		Matcher binMatcher = Pattern.compile(binNoRegex).matcher(cardNo.replaceAll(binNoExcludeRegex, ""));
+		
+		
+		log.info("cardNo is {}", cardNo.replaceAll(binNoExcludeRegex, ""));
+		if(binMatcher.matches()) {
+			log.info("cardNo is {}", binMatcher.group(1));
+			log.info("cardNo is {}", binMatcher.group(2).replaceAll("[0-9*]", "*"));
+		}
+		
+		
+		String  text    = "asdf 2013-05-12 asdf";
+		String  regex   = ".+?([0-9]{4}\\s?-\\s?[0-9]{2}\\s?-\\s?[0-9]{2}).+";
+		Matcher matcher = Pattern.compile(regex).matcher(text);
+
+		if (matcher.matches()) {
+		    String matchedGroup = matcher.group(1);
+		    System.out.println(matchedGroup);
+		}
+	}
 	
 	void fluxTest() {
 		final List<String> basket1 = Arrays
@@ -115,7 +140,6 @@ class ReactiveWebfluxApplicationTests {
 		
 	}
 	
-	@Test 
 	void groupedKey() {
 		log.info("product is {}",  ProductReq.getProductReqByGroupedKey("LE1206646154$LE1206646154_1236299893$SLE20006"));
 	

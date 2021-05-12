@@ -1,7 +1,9 @@
 package yoonho.demo.reactive.base.dataencrypt.impl;
 
 
-import org.springframework.beans.factory.annotation.Value;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
@@ -11,21 +13,37 @@ import yoonho.demo.reactive.util.CipherUtil;
 @Component
 @RequiredArgsConstructor
 public class DataEncryptManagerImpl implements DataEncryptManager {
-	private final CipherUtil cipherUtil;
+	final CipherUtil cipherUtil;
+	private static final String binNoExcludeRegex = "[^\\d*]"; 
+	private static final String actnNoExcludeRegex = "[^\\d]"; 
+	private static final String binNoRegex= "([0-9*]{6})([0-9*]*)";
+	private static final String binNoDecodeRegex= "([0-9*]{6})([\\w\\W]*)";
 	
 	@Override
 	public String encryptCardNo(String cardNo) {
-		return cipherUtil.encrypt(cardNo);
+		Matcher binMatcher = Pattern.compile(binNoRegex).matcher(cardNo.replaceAll(binNoExcludeRegex, ""));
+		
+		if(binMatcher.matches()) {
+			return binMatcher.group(1)
+					.concat(cipherUtil.encrypt(binMatcher.group(2)));
+		}
+		return "";
 	}
 	
 	@Override
 	public String decryptCardNo(String encCardNo) {
-		return cipherUtil.decrypt(encCardNo);
+		Matcher binMatcher = Pattern.compile(binNoDecodeRegex).matcher(encCardNo);
+		
+		if(binMatcher.matches()) {
+			return binMatcher.group(1)
+					.concat(cipherUtil.decrypt(binMatcher.group(2)));
+		}
+		return "";
 	}
 	
 	@Override
 	public String encryptAccountNo(String acntNo) {
-		return cipherUtil.encrypt(acntNo);
+		return cipherUtil.encrypt(acntNo.replaceAll(actnNoExcludeRegex, ""));
 	}
 	
 	@Override

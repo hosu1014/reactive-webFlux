@@ -44,6 +44,7 @@ public class User implements UserDetails, Persistable<Long>{
 	@Transient
 	private String password;
 	@Column("passwd")
+	@JsonIgnore
 	private String encPassword;
 	@Column("mb_nm")
 	private String username;
@@ -52,7 +53,7 @@ public class User implements UserDetails, Persistable<Long>{
 	@DataEncrypt(type=EncryptType.CARD_NO)
 	private String ccrdNo;
 	@DataEncrypt(type=EncryptType.ACCOUT_NO)
-	private String acntNo;
+	private String actnNo;
 	@CreatedBy
 	private String regrId;
 	@CreatedDate

@@ -46,15 +46,15 @@ public class CipherUtil {
 
 	public String encrypt(String value) {
 		try {
-			IvParameterSpec ivspec = new IvParameterSpec(iv);
-
 			SecretKeyFactory factory = SecretKeyFactory.getInstance(ALGORITHM);
 			KeySpec spec = new PBEKeySpec(secret.toCharArray(), salt.getBytes(), iteration, keylength);
 			SecretKey tmp = factory.generateSecret(spec);
-			SecretKeySpec secretKey = new SecretKeySpec(tmp.getEncoded(), SECRET_KEY_ALGORITHM);
 
+			SecretKeySpec secretKey = new SecretKeySpec(tmp.getEncoded(), SECRET_KEY_ALGORITHM);
+			IvParameterSpec ivspec = new IvParameterSpec(iv);
 			Cipher cipher = Cipher.getInstance(TRANSFORMATION);
 			cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivspec);
+
 			return Base64.getEncoder().encodeToString(cipher.doFinal(value.getBytes(StandardCharsets.UTF_8)));
 		} catch (Exception e) {
 			log.error("Error while encrypting: " + e.toString());
@@ -64,15 +64,15 @@ public class CipherUtil {
 
 	public String decrypt(String value) {
 		try {
-			IvParameterSpec ivspec = new IvParameterSpec(iv);
-
 			SecretKeyFactory factory = SecretKeyFactory.getInstance(ALGORITHM);
 			KeySpec spec = new PBEKeySpec(secret.toCharArray(), salt.getBytes(), iteration, keylength);
 			SecretKey tmp = factory.generateSecret(spec);
-			SecretKeySpec secretKey = new SecretKeySpec(tmp.getEncoded(), SECRET_KEY_ALGORITHM);
 
-			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+			SecretKeySpec secretKey = new SecretKeySpec(tmp.getEncoded(), SECRET_KEY_ALGORITHM);
+			IvParameterSpec ivspec = new IvParameterSpec(iv);
+			Cipher cipher = Cipher.getInstance(TRANSFORMATION);
 			cipher.init(Cipher.DECRYPT_MODE, secretKey, ivspec);
+			
 			return new String(cipher.doFinal(Base64.getDecoder().decode(value)));
 		} catch (Exception e) {
 			log.error("Error while decrypting: " + e.toString());

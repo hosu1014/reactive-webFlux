@@ -10,6 +10,7 @@ import org.springframework.r2dbc.core.Parameter;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.ReflectionUtils;
 
+import io.netty.util.internal.StringUtil;
 import io.r2dbc.spi.Row;
 import lombok.extern.slf4j.Slf4j;
 import yoonho.demo.reactive.base.dataencrypt.DataEncrypt;
@@ -23,14 +24,14 @@ public class ReadWriteConverterUtil {
 		.forEach(field -> {
 			field.setAccessible(true);
 			String db_column_name = getFieldName(field);
+			Object value = getValue(source, db_column_name);
 			if(field.isAnnotationPresent(Transient.class) == false 
-					&& ObjectUtils.isEmpty(source.get(db_column_name)) == false) {
+					&& ObjectUtils.isEmpty(value) == false) {
 				if(field.isAnnotationPresent(DataEncrypt.class)) {
-					EncryptType encType = field.getDeclaredAnnotation(DataEncrypt.class).type();
-					String value = source.get(db_column_name, String.class);
-					ReflectionUtils.setField(field, object, DataEncryptor.decrypt(value, encType) );
+					EncryptType encType = field.getDeclaredAnnotation(DataEncrypt.class).type();					
+					ReflectionUtils.setField(field, object, DataEncryptor.decrypt(String.valueOf(value), encType) );
 				} else {
-					ReflectionUtils.setField(field, object, source.get(db_column_name));
+					ReflectionUtils.setField(field, object, value);
 				}
 			}
 		});
@@ -76,4 +77,13 @@ public class ReadWriteConverterUtil {
         return str.replaceAll(regex, replacement)
                  .toLowerCase();
     }
+	
+	public static Object getValue(Row source, String fieldName) {
+		try {
+			return source.get(fieldName);
+		} catch(IllegalArgumentException e) {
+			// log.error(e.getMessage(), e);
+			return null;
+		}
+	}
 }
