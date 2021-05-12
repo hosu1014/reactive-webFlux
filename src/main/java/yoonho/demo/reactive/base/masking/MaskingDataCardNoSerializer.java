@@ -23,8 +23,8 @@ public class MaskingDataCardNoSerializer extends StdSerializer<String> {
     public void serialize(String value, JsonGenerator gen, SerializerProvider provider) throws IOException {
         // Masking data; for our example we are adding 'MASK'
     	Matcher cardNoMatcher = Pattern.compile(cardNoMaskPattern).matcher(value);
-    	String cardNo = "";
-    	if(cardNoMatcher.matches() && cardNoMatcher.groupCount() == 4) {
+    	String cardNo = value;
+    	if(cardNoMatcher.matches()) {
     		cardNo = cardNoMatcher.group(1)
     			.concat(splitString)
     			.concat(cardNoMatcher.group(2).replaceAll(targetRegex, maskingString))

@@ -16,8 +16,7 @@ public class MaskingDeserializer extends StdDeserializer<String> {
 
     @Override
     public String deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-        // un-masking logic here. in our example we are removing "MASK"
-        // string
+        // un-masking logic here.
         return p.getValueAsString();
     }
 }

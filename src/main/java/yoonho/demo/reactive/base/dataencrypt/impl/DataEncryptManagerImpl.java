@@ -27,7 +27,7 @@ public class DataEncryptManagerImpl implements DataEncryptManager {
 			return binMatcher.group(1)
 					.concat(cipherUtil.encrypt(binMatcher.group(2)));
 		}
-		return "";
+		return cardNo;
 	}
 	
 	@Override
@@ -38,7 +38,7 @@ public class DataEncryptManagerImpl implements DataEncryptManager {
 			return binMatcher.group(1)
 					.concat(cipherUtil.decrypt(binMatcher.group(2)));
 		}
-		return "";
+		return encCardNo;
 	}
 	
 	@Override

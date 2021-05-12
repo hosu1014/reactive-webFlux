@@ -13,9 +13,12 @@ public class MaskAnnotationIntrospector extends NopAnnotationIntrospector {
         	MaskingType type = annotated.getAnnotation(Masking.class).type();
         	
         	switch(type) {
-        	case CARD_NO : return MaskingDataCardNoSerializer.class;
-        	case ACCOUT_NO : return MaskingDataAccountNoSerializer.class;
-        	default : return MaskingDataAccountNoSerializer.class;
+        	case CARD_NO : 
+        		return MaskingDataCardNoSerializer.class;
+        	case ACCOUT_NO : 
+        		return MaskingDataAccountNoSerializer.class;
+        	default : 
+        		return MaskingDataAccountNoSerializer.class;
         	}
         }
 

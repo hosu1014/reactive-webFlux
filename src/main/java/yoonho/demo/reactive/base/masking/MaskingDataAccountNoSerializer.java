@@ -21,8 +21,8 @@ public class MaskingDataAccountNoSerializer extends StdSerializer<String> {
     @Override
     public void serialize(String value, JsonGenerator gen, SerializerProvider provider) throws IOException {
     	Matcher matcher = Pattern.compile(maskPattern).matcher(value);
-    	String actnNo = "";
-    	if(matcher.matches() && matcher.groupCount() == 2) {
+    	String actnNo = value;
+    	if(matcher.matches()) {
     		actnNo = matcher.group(1).replaceAll(targetRegex, maskingString)
     			.concat(matcher.group(2))
     			;
