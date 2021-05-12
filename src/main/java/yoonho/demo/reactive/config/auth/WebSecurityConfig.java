@@ -6,15 +6,18 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.ServerAuthenticationEntryPoint;
+import org.springframework.web.server.ServerWebExchange;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 import yoonho.demo.reactive.auth.filter.BearerAuthenticationWebFilter;
 import yoonho.demo.reactive.auth.filter.UriAuthorizationManager;
 import yoonho.demo.reactive.exception.ForbiddenException;
+import yoonho.demo.reactive.exception.UnauthorizedException;
 
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
@@ -28,6 +31,11 @@ public class WebSecurityConfig {
 	public SecurityWebFilterChain securitygWebFilterChain(ServerHttpSecurity http) {
 		return http
 			.exceptionHandling()
+			.authenticationEntryPoint((swe, e) ->  {
+				return Mono.fromRunnable(() -> {
+					throw new UnauthorizedException(e.getMessage()); 
+				});
+			})
 			.accessDeniedHandler((swe, e) -> {
 				return Mono.fromRunnable(() -> {
 					throw new ForbiddenException(e.getMessage());
