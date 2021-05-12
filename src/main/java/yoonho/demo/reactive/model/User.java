@@ -27,6 +27,8 @@ import lombok.With;
 import yoonho.demo.reactive.auth.Role;
 import yoonho.demo.reactive.base.dataencrypt.DataEncrypt;
 import yoonho.demo.reactive.base.dataencrypt.EncryptType;
+import yoonho.demo.reactive.base.masking.Masking;
+import yoonho.demo.reactive.base.masking.MaskingType;
 
 @Data
 @AllArgsConstructor
@@ -51,8 +53,10 @@ public class User implements UserDetails, Persistable<Long>{
 	private String email;
 	private String rtGrpNo;
 	@DataEncrypt(type=EncryptType.CARD_NO)
+	@Masking(type=MaskingType.CARD_NO)
 	private String ccrdNo;
 	@DataEncrypt(type=EncryptType.ACCOUT_NO)
+	@Masking(type=MaskingType.ACCOUT_NO)
 	private String actnNo;
 	@CreatedBy
 	private String regrId;
@@ -74,6 +78,7 @@ public class User implements UserDetails, Persistable<Long>{
 	@Override
 	@JsonIgnore
 	public Collection<? extends GrantedAuthority> getAuthorities() {
+		if(roles == null) return null;
 		return roles.stream()
 				.map(authority-> new SimpleGrantedAuthority(authority.name()) )
 				.collect(Collectors.toList());

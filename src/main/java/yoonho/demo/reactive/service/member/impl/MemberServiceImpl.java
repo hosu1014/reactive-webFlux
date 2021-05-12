@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 import yoonho.demo.reactive.auth.PBKDF2Encoder;
-import yoonho.demo.reactive.dto.UserAssetResponse;
+import yoonho.demo.reactive.dto.UserAssetDtoResponse;
 import yoonho.demo.reactive.model.User;
 import yoonho.demo.reactive.repository.MemberRepository;
 import yoonho.demo.reactive.service.member.MemberService;
@@ -30,7 +30,7 @@ public class MemberServiceImpl implements MemberService {
 		return memberRepository.save(user);
 	}
 	
-	public Mono<UserAssetResponse> getUserAsset(String userId) {
+	public Mono<UserAssetDtoResponse> getUserAsset(String userId) {
 		return memberRepository.findUserAssetByUserId(userId);
 	}
 }

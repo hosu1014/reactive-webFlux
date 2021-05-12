@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 import lombok.With;
 import yoonho.demo.reactive.base.dataencrypt.DataEncrypt;
 import yoonho.demo.reactive.base.dataencrypt.EncryptType;
+import yoonho.demo.reactive.base.masking.Masking;
+import yoonho.demo.reactive.base.masking.MaskingType;
 
 @Data
 @AllArgsConstructor
@@ -26,6 +28,7 @@ public class Customer extends BaseEntity implements Persistable<Long> {
 	private Long id;
 	private String name;
 	@DataEncrypt(type=EncryptType.CARD_NO)
+	@Masking(type=MaskingType.CARD_NO)
 	private String ccrdNo;
 	@CreatedBy
 	private String regrId;

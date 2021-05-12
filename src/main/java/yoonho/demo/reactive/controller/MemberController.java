@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
-import yoonho.demo.reactive.dto.UserAssetResponse;
+import yoonho.demo.reactive.dto.UserAssetDtoResponse;
 import yoonho.demo.reactive.model.User;
 import yoonho.demo.reactive.service.member.MemberService;
 
@@ -31,7 +31,7 @@ public class MemberController {
 	}
 	
 	@GetMapping("/asset/{userId}")
-	public Mono<UserAssetResponse> getUerAsset(@PathVariable String userId) {
+	public Mono<UserAssetDtoResponse> getUerAsset(@PathVariable String userId) {
 		return memberService.getUserAsset(userId);
 	}
 	
