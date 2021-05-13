@@ -92,7 +92,7 @@ public class ReadWriteConverterHelper {
 		try {
 			return source.get(fieldName);
 		} catch(IllegalArgumentException e) {
-			// log.error(e.getMessage(), e);
+			// Projection class에는 전체 컬럼이 없어서 IllegalArgumentException 오류가 발생함. 오류 무시 처리 
 			return null;
 		}
 	}
