@@ -14,26 +14,23 @@ public class DataEncryptorFactory {
 		this.acntNoDataEncryptor = new CardNoDataEncryptor();
 	}
 	
-	public String encrypt(String value, EncryptType type) {
+	private DataEncryptor getDataEncryptor(EncryptType type) {
 		switch(type) {
 		case CARD_NO : 
-			return cardNoDataEncryptor.encrypt(value);
+			return cardNoDataEncryptor;
 		case ACCOUT_NO : 
-			return acntNoDataEncryptor.encrypt(value);
+			return acntNoDataEncryptor;
 		default : 
-			return acntNoDataEncryptor.encrypt(value);
+			return acntNoDataEncryptor;
 		}
 	}
 	
+	public String encrypt(String value, EncryptType type) {
+		return getDataEncryptor(type).encrypt(value);
+	}
+	
 	public String decrypt(String value, EncryptType type) {
-		switch(type) {
-		case CARD_NO : 
-			return cardNoDataEncryptor.decrypt(value);
-		case ACCOUT_NO : 
-			return acntNoDataEncryptor.decrypt(value);
-		default : 
-			return acntNoDataEncryptor.decrypt(value);
-		}
+		return getDataEncryptor(type).decrypt(value);
 	}	
 }
 

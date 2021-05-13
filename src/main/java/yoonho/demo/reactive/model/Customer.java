@@ -21,14 +21,14 @@ import yoonho.demo.reactive.base.masking.MaskingType;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Customer extends BaseEntity implements Persistable<Long> {
+public class Customer implements Persistable<Long> {
 
 	@Id
 	@With
 	private Long id;
 	private String name;
-	@DataEncrypt(type=EncryptType.CARD_NO)
 	@Masking(type=MaskingType.CARD_NO)
+	@DataEncrypt(type=EncryptType.CARD_NO)
 	private String ccrdNo;
 	@CreatedBy
 	private String regrId;

@@ -21,7 +21,6 @@ public class MaskingDataCardNoSerializer extends StdSerializer<String> {
 
     @Override
     public void serialize(String value, JsonGenerator gen, SerializerProvider provider) throws IOException {
-        // Masking data; for our example we are adding 'MASK'
     	Matcher cardNoMatcher = Pattern.compile(cardNoMaskPattern).matcher(value);
     	String cardNo = value;
     	if(cardNoMatcher.matches()) {
