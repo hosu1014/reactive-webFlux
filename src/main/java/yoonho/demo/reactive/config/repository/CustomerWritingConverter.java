@@ -5,13 +5,13 @@ import org.springframework.data.convert.WritingConverter;
 import org.springframework.data.r2dbc.mapping.OutboundRow;
 
 import lombok.extern.slf4j.Slf4j;
+import yoonho.demo.reactive.base.r2dbc.ReadWriteConverterHelper;
 import yoonho.demo.reactive.model.Customer;
-import yoonho.demo.reactive.util.ReadWriteConverterUtil;
 
 @WritingConverter
 @Slf4j
 public class CustomerWritingConverter implements Converter<Customer, OutboundRow> {
 	public OutboundRow convert(Customer source) {
-		return ReadWriteConverterUtil.writeConvert(source);
+		return ReadWriteConverterHelper.writeConvert(source);
 	}
 }

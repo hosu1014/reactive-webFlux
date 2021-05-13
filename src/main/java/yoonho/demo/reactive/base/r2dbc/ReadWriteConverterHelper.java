@@ -1,4 +1,4 @@
-package yoonho.demo.reactive.util;
+package yoonho.demo.reactive.base.r2dbc;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -19,13 +19,16 @@ import yoonho.demo.reactive.base.dataencrypt.DataEncryptorFactory;
 import yoonho.demo.reactive.base.dataencrypt.EncryptType;
 
 @Slf4j
-public class ReadWriteConverterUtil {
+public class ReadWriteConverterHelper {
 	private static DataEncryptorFactory dataEncryptorFactory;
+	final static String regex = "([a-z])([A-Z]+)";
+    final static String replacement = "$1_$2";
+    
 	@Component 
 	public static class Init {
 		@Autowired
 		void init(DataEncryptorFactory dataEncryptorFactory) {
-			ReadWriteConverterUtil.dataEncryptorFactory = dataEncryptorFactory;
+			ReadWriteConverterHelper.dataEncryptorFactory = dataEncryptorFactory;
 		}
 	}
 	
@@ -81,9 +84,6 @@ public class ReadWriteConverterUtil {
 	}
 	
 	public static String camelToSnake(String str) {
-        final String regex = "([a-z])([A-Z]+)";
-        final String replacement = "$1_$2";
-  
         return str.replaceAll(regex, replacement)
                  .toLowerCase();
     }
