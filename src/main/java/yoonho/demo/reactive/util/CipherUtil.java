@@ -11,7 +11,8 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -33,18 +34,14 @@ public class CipherUtil {
 	private static final String TRANSFORMATION = "AES/CBC/PKCS5Padding";
 	private static final String SECRET_KEY_ALGORITHM = "AES";
 	private static final String ALGORITHM = "PBKDF2WithHmacSHA256";
-	@Value("${jjwt.password.encoder.secret}")
-	private String secret;
-	@Value("${jjwt.password.encoder.salt}")
-	private String salt;
-	@Value("${jjwt.password.encoder.iteration}")
-	private Integer iteration;
-	@Value("${jjwt.password.encoder.keylength}")
-	private Integer keylength;
-	private final byte[] iv = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	private static String secret;
+	private static String salt;
+	private static Integer iteration;
+	private static Integer keylength;
+	private static final byte[] iv = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	
 
-	public String encrypt(String value) {
+	public static String encrypt(String value) {
 		try {
 			SecretKeyFactory factory = SecretKeyFactory.getInstance(ALGORITHM);
 			KeySpec spec = new PBEKeySpec(secret.toCharArray(), salt.getBytes(), iteration, keylength);
@@ -62,7 +59,7 @@ public class CipherUtil {
 		return null;
 	}
 
-	public String decrypt(String value) {
+	public static String decrypt(String value) {
 		try {
 			SecretKeyFactory factory = SecretKeyFactory.getInstance(ALGORITHM);
 			KeySpec spec = new PBEKeySpec(secret.toCharArray(), salt.getBytes(), iteration, keylength);
@@ -78,5 +75,16 @@ public class CipherUtil {
 			log.error("Error while decrypting: " + e.toString());
 		}
 		return null;
+	}
+	
+	@Component
+	static class Init {
+		@Autowired
+		void init(Environment environment) throws Exception {
+			CipherUtil.secret = environment.getProperty("jjwt.password.encoder.secret");
+			CipherUtil.salt = environment.getProperty("jjwt.password.encoder.salt");
+			CipherUtil.iteration = Integer.valueOf(environment.getProperty("jjwt.password.encoder.iteration"));
+			CipherUtil.keylength = Integer.valueOf(environment.getProperty("jjwt.password.encoder.keylength"));
+		}
 	}
 }
