@@ -3,6 +3,10 @@ package yoonho.demo.reactive.base.masking;
 import com.fasterxml.jackson.databind.introspect.Annotated;
 import com.fasterxml.jackson.databind.introspect.NopAnnotationIntrospector;
 
+import yoonho.demo.reactive.base.masking.impl.MaskingDataAccountNoSerializer;
+import yoonho.demo.reactive.base.masking.impl.MaskingDataCardNoSerializer;
+import yoonho.demo.reactive.base.masking.impl.MaskingDeserializer;
+
 public class MaskAnnotationIntrospector extends NopAnnotationIntrospector {
     private static final long serialVersionUID = 1L;
 
