@@ -3,6 +3,7 @@ package yoonho.demo.reactive.service.payment;
 import java.util.Arrays;
 
 import lombok.Getter;
+import yoonho.demo.reactive.exception.ValidationException;
 
 @Getter
 public enum CreditCard {
@@ -21,8 +22,8 @@ public enum CreditCard {
 	public static CreditCard lookup(String cd) {
 		return Arrays.stream(values())
 				.filter(card -> card.getCd().equals(cd))
-				.findAny()
-				.get();
+				.findFirst()
+				.orElseThrow(() -> new ValidationException(null));
 	}
 
 }

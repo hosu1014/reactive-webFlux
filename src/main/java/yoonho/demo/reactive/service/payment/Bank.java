@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import yoonho.demo.reactive.exception.ValidationException;
 
 @Getter
 @Slf4j
@@ -21,8 +22,9 @@ public enum Bank {
 	public static Bank lookup(String cd) {
 		return Arrays.stream(values())
 				.filter(bank -> bank.getBankCd().equals(cd))
-				.findAny()
-				.get();
+				.findFirst()
+				.orElseThrow(() -> new ValidationException(null))
+				;
 	}
 
 }
