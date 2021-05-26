@@ -4,6 +4,8 @@ spring:
     password: order1111
   messages:    basename: i18n/messages
 #    encoding: UTF-8
+  cache:
+    jcache:      config: classpath:ehcache.xml
     
 
 logging:
