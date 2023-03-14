@@ -1,15 +1,19 @@
 spring:
-  r2dbc:    url: r2dbc:postgresql://localhost:5432/Order 
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/Order 
     username: Order
     password: order1111
-  messages:    basename: i18n/messages
+  messages:
+    basename: i18n/messages
 #    encoding: UTF-8
   cache:
-    jcache:      config: classpath:ehcache.xml
+    jcache:
+      config: classpath:ehcache.xml
     
 
 logging:
-  level:    org.springframework.web.reactive.function.client.ExchangeFunctions: DEBUG
+  level:
+    org.springframework.web.reactive.function.client.ExchangeFunctions: DEBUG
     org.springframework.http.codec : DEBUG
 #    org.springframework.security.web.server.authorization.DelegatingReactiveAuthorizationManager : DEBUG 
 #    org.springframework.security : DEBUG
@@ -17,7 +21,7 @@ logging:
 
 api:
   baseUri:
-    lotteon: https://pbf.lotteon.com
+    on: https://pbf.on.com
     
 jjwt:
   password:
